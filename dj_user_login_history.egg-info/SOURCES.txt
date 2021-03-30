@@ -1,0 +1,16 @@
+README.md
+setup.py
+dj_user_login_history.egg-info/PKG-INFO
+dj_user_login_history.egg-info/SOURCES.txt
+dj_user_login_history.egg-info/dependency_links.txt
+dj_user_login_history.egg-info/requires.txt
+dj_user_login_history.egg-info/top_level.txt
+login_history/__init__.py
+login_history/admin.py
+login_history/apps.py
+login_history/models.py
+login_history/tests.py
+login_history/urls.py
+login_history/views.py
+login_history/migrations/0001_initial.py
+login_history/migrations/__init__.py
