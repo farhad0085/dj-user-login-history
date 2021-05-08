@@ -106,3 +106,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_HISTORY_DELETE_OLD = True
+LOGIN_HISTORY_KEEP_LAST = 2

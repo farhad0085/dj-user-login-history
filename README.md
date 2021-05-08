@@ -55,3 +55,10 @@ def login_histories(request):
 ```
 7. Use the `ip` to grab more information directly from the Frontend instead of backend, it'll optimize performance.
 There're huge JS library which do the work, use any one of them.
+
+> NB: When you write your own login view, make sure you log the user in using django login
+```
+from django.contrib.auth import login as django_login
+
+django_login(request, user)
+```

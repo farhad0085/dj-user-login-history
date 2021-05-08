@@ -2,6 +2,8 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.db import models
 from django.contrib.auth import get_user_model
+from . import settings
+import datetime
 
 
 class LoginHistory(models.Model):
@@ -9,10 +11,11 @@ class LoginHistory(models.Model):
     ip = models.CharField(max_length=15, blank=True, null=True) # save only ip, later we can get user's details from this ip address.
     user_agent = models.TextField(blank=True)
     date_time = models.DateTimeField(auto_now_add=True)
+    is_login = models.BooleanField(default=True, null=True, blank=True) # login or logout
     is_logged_in = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.ip or self.username
+        return f"{self.id} - {self.user} - {self.ip}"
 
     class Meta:
         ordering = ['-date_time']
@@ -36,6 +39,22 @@ def get_client_ip(request):
     return ip
 
 
+def delete_old_login_histories(user):
+   if settings.LOGIN_HISTORY_DELETE_OLD:
+        today = datetime.date.today()
+
+        if settings.LOGIN_HISTORY_KEEP_DAYS:
+            days_x_ago = today - datetime.timedelta(days=settings.LOGIN_HISTORY_KEEP_DAYS)
+            objs = LoginHistory.objects.filter(date_time__lte=days_x_ago, user=user).order_by('-date_time')
+            objs.delete()
+        elif settings.LOGIN_HISTORY_KEEP_LAST:
+            objs = LoginHistory.objects.filter(user=user)\
+                    .order_by('-date_time')[:settings.LOGIN_HISTORY_KEEP_LAST]\
+                    .values_list("id", flat=True)
+            objs = LoginHistory.objects.exclude(pk__in=list(objs))
+            objs.delete()
+
+
 @receiver(user_logged_in)
 def post_login(sender, user, request, **kwargs):
     ip = get_client_ip(request)
@@ -43,7 +62,9 @@ def post_login(sender, user, request, **kwargs):
         user=user,
         ip=ip,
         user_agent=request.META['HTTP_USER_AGENT'],
+        is_login=True
     )
+    delete_old_login_histories(user)
 
 @receiver(user_logged_out)
 def post_logout(sender, user, request, **kwargs):
@@ -53,10 +74,15 @@ def post_logout(sender, user, request, **kwargs):
             user=user,
             ip=ip,
             user_agent=request.META['HTTP_USER_AGENT'],
-            is_logged_in=False
+            is_logged_in=False,
+            is_login=False
         )
 
-        LoginHistory.objects.filter(user=user, ip=ip, user_agent=request.META['HTTP_USER_AGENT']).update(is_logged_in=False)
+        LoginHistory.objects.filter(
+            user=user, ip=ip, user_agent=request.META['HTTP_USER_AGENT'])\
+            .update(is_logged_in=False)
+    delete_old_login_histories(user)
+    
 
 
 # adding custom methods to default User model
