@@ -1,4 +1,4 @@
-# DJ User Login History
+# dj-user-login-history
 
 A Django app which keep track of user login history.
 
