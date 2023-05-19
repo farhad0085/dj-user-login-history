@@ -10,7 +10,7 @@ README = (BASE_PATH / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="dj-user-login-history",
-    version="1.0.3",
+    version="1.0.4",
     description="Django app which keep track of user login history.",
     long_description=README,
     long_description_content_type="text/markdown",
