@@ -10,7 +10,7 @@ README = (BASE_PATH / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="dj-user-login-history",
-    version="1.0.4",
+    version="1.0.5",
     description="Django app which keep track of user login history.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -30,3 +30,5 @@ setup(
 
 # build
 # python setup.py sdist bdist_wheel
+# upload to pypi
+# twine upload dist/*

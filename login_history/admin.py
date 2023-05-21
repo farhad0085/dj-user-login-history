@@ -4,7 +4,7 @@ from .models import LoginHistory
 
 class ReadOnlyLoginHistoryAdmin(admin.ModelAdmin):
     list_display = ['user', 'id', 'date_time', 'ip', 'user_agent', 'is_logged_in', 'get_action_status']
-    list_filter = ['user__username']
+    list_filter = ['user']
 
     def get_action_status(self, obj):
         if obj.is_login:
