@@ -8,7 +8,7 @@ import datetime
 
 class LoginHistory(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='login_histories')
-    ip = models.CharField(max_length=15, blank=True, null=True) # save only ip, later we can get user's details from this ip address.
+    ip = models.CharField(max_length=39, blank=True, null=True) # save only ip, later we can get user's details from this ip address.
     user_agent = models.TextField(blank=True)
     date_time = models.DateTimeField(auto_now_add=True)
     is_login = models.BooleanField(default=True, null=True, blank=True) # login or logout
